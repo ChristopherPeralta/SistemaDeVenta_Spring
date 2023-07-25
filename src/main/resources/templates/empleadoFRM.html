@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Listado de empleados</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/menu.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/frm.css}">
+    <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
+</head>
+
+<body>
+	<header th:replace="menu::header"></header>
+	
+	<main>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-contetnt-center card">
+				<div class="titulos">
+					
+					<a class="btn btn-warning btn-sm" th:href="@{/empleado}"><i class='bx bx-arrow-back btn-warning' ></i></a>
+					
+					<h1 class="text-center" th:text="${titulo}"></h1>
+				</div>
+				<div class="card-body">
+					<form th:Action="@{/empleado/guardar}" th:object="${empleado}" method="POST">
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label>Dni : </label>
+								<input type="text" name="DNI" th:field="*{DNI}" class="form-control" placeholder="Ingrese su Dni" required>
+							</div>
+							
+							<div class="form-group col-md-6">	
+								<label>Telefono : </label>
+								<input type="text" name="TELEFONO" th:field="*{TELEFONO}" class="form-control" placeholder="Ingrese su telefono" required>
+							</div>	
+							</div>
+						
+						<div class="form-group">
+							<label>Nombre : </label>
+							<input type="text" name="NOMBRE" th:field="*{NOMBRE}" class="form-control" placeholder="Ingrese su nombre" required>
+						</div>
+						
+						<div class="form-group">
+							<label>Direccion : </label>
+							<input type="text" name="DIRECCION" th:field="*{DIRECCION}" class="form-control" placeholder="Ingrese su direccion" required>
+						</div>	
+						<div class="form-group">	
+							<label>Email : </label>
+							<input type="text" name="EMAIL" th:field="*{EMAIL}" class="form-control" placeholder="Ingrese su email" required>
+						</div>
+						
+						<input type="hidden" th:field="*{ESTADO}" value="ACTIVO">
+						
+						<div class="form-group">
+			            	<label for="distrito">Distrito:</label>
+			            	<div >
+			             		<select th:field="*{COD_DISTRITO}" class="form-control form-control-sm" id="distrito">
+				                	<option th:each="distrito: ${distritos}" th:value="${distrito.COD_DISTRITO}" th:text="${distrito.NOMBRE}"></option>
+			              	</select>
+			            	</div>
+			         	</div>
+			         	
+						<div class="botones">				
+								<button class="btn btn-success">Guardar</button>
+								
+								<button class="btn btn-danger" th:href="@{/empleado}" onclick="return confirm('Está seguro de querer cancelar el registro')">Cancelar</button>					
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+	<script th:src="@{/js/menu.js}"></script>
+</body>
+</html>

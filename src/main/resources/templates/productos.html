@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Listado de empleados</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="./css/menu.css">
+	<link rel="stylesheet" href="./css/tablas.css">
+    <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
+</head>
+
+<body>
+	
+	<header th:replace="menu::header"></header>
+	
+	<main >
+	
+	<div class="container">
+			<div class="agregar">
+				<h1 th:text="${titulo}"></h1>
+				<a th:href="@{/producto/registrar}" title="Crear nuevo registro">
+		        <i class='bx bxs-plus-circle active'></i>
+		      	</a>
+	      	</div>
+      <hr>
+		
+		<table class="table table-striped table-bordered">
+			<thead class="table-dark">
+				<tr>
+					<th>CODIGO</th>
+					<th>DESCRIPCION</th>
+					<th>STOCK</th>
+					<th>PRECIO_VENTA</th>
+					<th>PRECIO_COMPRA</th>
+					<th>CLASIFICACION</th>
+					<th>MARCA</th>
+					<th>ACCIONES</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="producto : ${productos}">
+					<td th:text="${producto.COD}">CODIGO</td>
+					<td th:text="${producto.DESCRIPCION}">DESCRIPCION</td>
+					<td th:text="${producto.STOCK}">STOCK</td>
+					<td th:text="${producto.PRECIO_VENTA}">PRECIO_VENTA</td>
+					<td th:text="${producto.PRECIO_COMPRA}">PRECIO_COMPRA</td>
+					<td th:text="${producto.COD_CLASIFICACION.NOMBRE}">CLASIFICACION</td>
+					<td th:text="${producto.COD_MARCA.NOMBRE}">MARCA</td>
+					
+					
+					
+					<td class="acciones">
+						<a class="btn btn-success btn-sm" th:href="@{/producto/editar/}+${producto.COD}">
+                    		<i class='bx bxs-pencil'></i>
+                  		</a>
+                  		<a class="btn btn-danger btn-sm" th:href="@{/producto/eliminar/}+${producto.COD}" 
+                  		onclick="return confirm('Está seguro de querer eliminar el registro')">
+                    		<i class='bx bxs-trash'></i>
+                  		</a>
+                  		
+                	</td>
+                	
+             		
+			</tbody>
+	
+	</main>
+	
+	<script src="./js/menu.js"></script>
+</body>
+</html>

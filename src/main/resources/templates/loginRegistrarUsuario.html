@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" th:href="@{/css/login.css}">
+
+
+	<title>Login</title>
+</head>
+
+<body>
+
+	<div class="container-formulario container">
+
+		<div class="logo">
+			<img th:src="@{/img/logo1.png}" width="300px" height="250px" />
+			<h2 class="lblIniciaSesion">Inicia tu sesion</h2>
+		</div>
+
+
+		<div class="containerRight">
+			<main>
+				<form class="form" th:action="@{/usuario/guardar}" th:object="${usuario}" method="post">
+					<h2 class="lblLogin">Regístrate</h2>
+
+					<div class="inputs">
+						<input type="text" class="box" placeholder="Ingresa tu correo" id="usuario" name="usuario"
+							th:field="*{usuario}" required>
+						<input type="password" class="box" placeholder="Ingresa tu contraseña" id="contraseña"
+							name="contraseña" th:field="*{contraseña}" required>
+
+
+						<!-- Agregamos los campos COD_CARGO y COD_EMPLEADO como select con opciones -->
+						<div class="form-row">
+
+							<div class="form-group col-md-6">
+								<label for="COD_CARGO">Cargo:</label>
+								<select id="COD_CARGO" name="COD_CARGO" th:field="*{COD_CARGO}" required>
+									<option th:each="cargo : ${cargos}" th:value="${cargo.COD_CARGO}"
+										th:text="${cargo.NOMBRE}"></option>
+								</select>
+							</div>
+
+							<div class="form-group col-md-6">
+								<label for="COD_EMPLEADO">Empleado:</label>
+								<select id="COD_EMPLEADO" name="COD_EMPLEADO" th:field="*{COD_EMPLEADO}" required>
+									<option th:each="empleado : ${empleados}" th:value="${empleado.COD_EMPLEADO}"
+										th:text="${empleado.NOMBRE}"></option>
+								</select>
+							</div>
+
+						</div>
+
+						<input type="submit" value="Registrar" class="submit">
+
+
+						<a th:href="@{/login}">Ya tengo cuenta. Iniciar sesión</a>
+					</div>
+
+				</form>
+			</main>
+		</div>
+
+	</div>
+</body>
+
+</html>

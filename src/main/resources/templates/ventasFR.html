@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Listado de empleados</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/menu.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/frm.css}">
+    <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
+	
+	<header th:replace="menu::header"></header>
+	
+	<main>
+	
+<script>src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            // Calcular el importe total al cambiar la cantidad o el precio unitario
+
+            $(".cantidad, .precio").on("input", function () {
+
+                calcularImporteTotal();
+
+            });
+
+        });
+
+ 
+
+        function calcularImporteTotal() {
+
+            let importeTotal = 0;
+
+ 
+
+            $(".detalle-venta").each(function () {
+
+                const CANTIDAD = $(this).find(".cantidad").val();
+
+                const PRECIO_VENTA = $(this).find(".precio").val();
+
+                const importe = CANTIDAD * PRECIO_VENTA;
+
+                $(this).find(".importe").text(importe.toFixed(2));
+
+                IMPORTE_TOTAL += importe;
+
+            });
+
+ 
+
+            $("#importeTotal").text(IMPORTE_TOTAL.toFixed(2));
+
+        }
+
+    </script>
+
+</head>
+
+<body
+
+
+<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-contetnt-center card">
+				<div class="titulos">
+					<a class="btn btn-warning btn-sm" th:href="@{/producto}"><i class='bx bx-arrow-back btn-warning' ></i></a>
+					<h1 class="text-center" th:text="${titulo}"></h1>
+				</div>
+				
+				<div class="card-body">
+					
+					<form th:Action="@{/venta/guardar}" th:object="${venta}" method="POST">
+									
+						<div class="form-row">
+							
+							<div class="form-group">
+							<label for="FECHA">Fecha:</label>
+							<input type="date" name="FECHA" th:field="*{FECHA}" class="form-control" placeholder="Ingrese la FECHA" required>
+						</div>
+						
+							<div class="form-group col-md-6">
+				            	<label for="cliente">Cliente :</label>
+				             		<select th:field="*{COD_CLIENTE}" class="form-control form-control" id="cliente">
+					                	<option th:each="cliente: ${clientes}" th:value="${cliente.COD_CLIENTE}" th:text="${cliente.NOMBRE}"></option>
+				              	</select>
+				         	</div>
+			         	
+							<div class="form-group col-md-6">
+				            	<label for="empleado">Empleado :</label>
+				             		<select th:field="*{COD_EMPLEADO}" class="form-control form-control" id="marca">
+					                	<option th:each="empleado: ${empleados}" th:value="${empleado.COD_EMPLEADO}" th:text="${empleado.NOMBRE}"></option>
+				              	</select>
+				         	</div>
+				         	
+				        
+				         	
+				         	<div class="form-group col-md-6">
+				            	<label for="metodoPago">Metodo Pago :</label>
+				             		<select th:field="*{COD_METODO_PAGO}" class="form-control form-control" id="metodoPago">
+					                	<option th:each="metodoPago: ${metodoPagos}" th:value="${metodoPago.COD_METODO_PAGO}" th:text="${metodoPago.NOMBRE}"></option>
+				              	</select>
+				         	</div>
+				         	
+						</div>
+						
+						<input type="hidden" th:field="*{ESTADO}" value="ACTIVO">
+					
+					<label for="detalleVenta">Detalle de Ventas:</label>
+
+    <table id="detalleVenta">
+
+        <tr>
+
+            <th>Producto</th>
+
+            <th>Cantidad</th>
+
+            <th>Precio Unitario</th>
+
+            <th>Importe</th>
+
+        </tr>
+
+        <tr class="detalle-venta">
+
+            <td>
+
+                <select name="detalleVenta[0].COD.COD">
+
+                    <option value="">Seleccione un producto</option>
+
+                    <option th:each="producto : ${productos}"
+
+                            th:value="${producto.COD}"
+
+                            th:text="${producto.DESCRIPCION}">
+
+                    </option>
+
+                </select>
+
+            </td>
+
+            <td>
+				
+				<input type="number" class="cantidad" name="detalleVentas[0].cantidad" min="1">
+                
+            </td>
+
+            <td>
+				
+				<select name="detalleVenta[0].COD.COD">
+
+                    <option th:each="producto : ${productos}"
+
+                            th:value="${producto.COD}"
+
+                            th:text="${producto.PRECIO_VENTA}">
+
+                    </option>
+
+                </select> 
+
+            </td>
+
+            <td class="importe"></td>
+
+        </tr>
+
+    </table>
+
+ 
+
+    <button type="button" onclick="agregarFila()">Agregar Producto</button><br><br>
+
+ 
+
+    <label for="importeTotal">Importe Total:</label>
+
+    <span id="importeTotal">0.00</span><br><br>
+
+ 
+
+    <button type="submit">Realizar Venta</button>
+
+</form>
+
+ 
+
+<script>
+
+    let fila = 0;
+
+ 
+
+    function agregarFila() {
+
+        fila++;
+
+ 
+
+        const filaHtml = `
+
+            <tr class="detalle-venta">
+
+                <td>
+
+                    <select name="detalleVentas[${fila}].producto.codProducto">
+
+                        <option value="">Seleccione un producto</option>
+
+                        <option th:each="producto : ${productos}"
+
+                                th:value="${producto.codProducto}"
+
+                                th:text="${producto.descripcion}">
+
+                        </option>
+
+                    </select>
+
+                </td>
+
+                <td>
+
+                    <input type="number" class="cantidad" name="detalleVentas[${fila}].cantidad" min="1">
+
+                </td>
+
+                <td>
+
+                    <input type="number" class="precio" name="detalleVentas[${fila}].precioVenta" min="0.01" step="0.01">
+
+                </td>
+
+                <td class="importe"></td>
+
+            </tr>
+
+        `;
+
+ 
+
+        $("#detalleVentas").append(filaHtml);
+
+    }
+    </script>
+
+					
+					
+					
+					
+					
+					
+					
+			         	<div class="botones">				
+							<button class="btn btn-success">Guardar</button>
+								
+							<button class="btn btn-danger" th:href="@{/producto}" onclick="return confirm('Está seguro de querer cancelar el registro')">Cancelar</button>					
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</main>
+	<script th:src="@{/js/menu.js}"></script>
+</body>
+</html>
+
+
+
+
+
+
+    
+
+ 
+
+    

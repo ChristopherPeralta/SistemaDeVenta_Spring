@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    
+	<link rel="stylesheet" href="./css/login.css">
+	
+</head>
+<body>
+	
+	<div class="container-formulario container">
+
+        <div class="logo">          
+            <img src="img/logo1.png" width="300px" height="250px" />
+            <h2 class="lblIniciaSesion">Inicia tu sesion</h2>
+        </div>
+
+
+        <div class="containerRight">
+            <main>
+                <form class = "form" action="/menu" method="post">
+                    <h2 class="lblLogin">Login</h2>
+                    
+                    <div class="inputs">
+                        <input type="text" name="usuario" class="box" placeholder="Ingresa tu correo">
+                        <input type="password" name="contraseña" class="box" placeholder="Ingresa tu contraseña" required>
+                        <input type="submit" value="ingresar" class="submit"> 
+                        <a href="loginRecuperarContraseña.html">¿Olvidaste tu contraseña?</a>
+                        <br>
+                        <a th:href="@{/usuario/registrar}">¿No tienes cuenta?. Regístrate</a>  
+                    </div>
+                </form>
+            </main>
+        </div>
+    
+    </div>
+	
+	<p th:text="${error}"></p>
+	
+	
+
+</body>
+</html>

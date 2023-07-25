@@ -1,0 +1,180 @@
+:root{
+    --backgroundPage: #E5ECF9;
+    --backgroundLeft: #96A8A2;
+    --backgroundRight: #e7e3ea;
+    --PrincipalColor: #2C8C79;
+    --placeholderLetter: #6A998C;
+    --LoginButtonLetter: #e7e3ea;
+    --buttonClick: #b0d6cf;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.body {
+    display: flex;
+    background-color: var(--backgroundPage);
+}
+
+.container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto; 
+    
+}
+
+.container-formulario{
+    display: flex;
+    background-color: var(--backgroundLeft);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); 
+    align-items: center;
+    margin-top: 15vh;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    align-items: center;
+    text-align: center;
+}
+
+.lblIniciaSesion {
+    text-transform: uppercase;
+    font-size: 30px;
+    font-style: bold;
+    margin-bottom: 25px;
+}
+
+.containerRight {
+    border-radius: 30px 0px 0px 30px;
+    background-color: var(--backgroundRight);
+    width:55%;
+}
+
+.form {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 100px;
+    padding-left: 100px;  
+    text-align: center;
+}
+
+
+.lblLogin {
+    color: var(--PrincipalColor);
+    font-size: 45px;
+    padding-bottom: 25px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.box {
+	font-size: medium;
+    outline: none;
+    border-color: var(--PrincipalColor);
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    padding: 20px 5px;
+    margin-bottom: 20px;
+    background-color: var(--backgroundRight);
+}
+
+::placeholder {
+    color: var(--placeholderLetter);
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    color: #6A998C;
+    margin-bottom: 1rem;
+   
+  }
+
+  .form-group {
+    flex: 1;
+  }
+  
+select{
+	border-radius: 5px;
+	color: #6A998C;
+	font-size: medium;
+	border: solid 1px  var(--placeholderLetter);
+}
+
+
+
+
+@media (min-width:1200px) {
+    .submit {
+        margin: 35px 80px 35px 80px
+    }
+}
+.submit {
+    background-color: var(--PrincipalColor);
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 35px;
+    color: var(--LoginButtonLetter);
+    font-size: 18px;
+    text-transform: uppercase;
+    border: 0;
+    border-radius: 25px;
+    
+    transition: background-color .3s ease-in-out;
+}
+
+.inputs input[type="submit"]:hover {
+    cursor: pointer;
+    background-color: var(--buttonClick);
+}
+
+.inputs a{
+    display: inline-block;
+    color: var(--PrincipalColor);
+    text-decoration: none;
+    font-size: 15px;
+}
+
+
+
+
+@media(max-width:990px) {
+
+    .container {
+        width: 350px;
+        height: 600px;
+        margin-top: 100px;
+    }
+
+    .container-formulario{
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .containerRight {
+        width: 100%;
+        padding: 30px;
+        border-radius: 0px 0px 0px 0px;
+    }
+
+    .form {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .lblLogin {
+        margin-top: 50px;
+    }
+}
