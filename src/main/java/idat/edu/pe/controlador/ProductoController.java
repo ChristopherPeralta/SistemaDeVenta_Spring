@@ -1,6 +1,9 @@
 package idat.edu.pe.controlador;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import idat.edu.pe.entidad.Clasificacion;
+import idat.edu.pe.entidad.Cliente;
+import idat.edu.pe.entidad.Distrito;
 import idat.edu.pe.entidad.Marca;
 import idat.edu.pe.entidad.Producto;
 import idat.edu.pe.servicio.ClasificacionService;
@@ -33,13 +39,18 @@ public class ProductoController {
 	
 	@RequestMapping("/producto")
 	public String listaProductos(Model model) {
-		List<Producto>listadoProductos = productoService.listaProductos();
+		List<Producto>listadoProductos = productoService.listaProductos().stream()
+                .filter(producto -> "Activo".equals(producto.getESTADO()))
+                .collect(Collectors.toList());
+		List<Marca>listMarca=marcaService.listaMarca();
+		List<Clasificacion>listClasificacion=clasificacionService.listaClasificacion();
 	
 		model.addAttribute("titulo", "Lista de Productos");
 		model.addAttribute("productos", listadoProductos);
+		model.addAttribute("clasificaciones", listClasificacion);
+		model.addAttribute("marcas", listMarca);
 		
 		return "productos.html";
-		
 	}
 	
 	@GetMapping("/producto/registrar")
@@ -48,6 +59,8 @@ public class ProductoController {
 		List<Clasificacion>listClasificacion=clasificacionService.listaClasificacion();
 		
 		Producto producto = new Producto();
+		producto.setESTADO("Activo");
+		producto.setSTOCK(0.0f);
 		model.addAttribute("titulo", "Nuevo Producto");
 		model.addAttribute("producto", producto);
 		model.addAttribute("marcas", listMarca);
@@ -93,9 +106,54 @@ public class ProductoController {
 	@GetMapping("/producto/eliminar/{id}")
     public String editar(@PathVariable("id") String COD){
 
-		productoService.deleteById(COD);
+		productoService.softDelete(COD);
 
 		return "redirect:/producto";
     }
+	
+	@GetMapping("/productodetalle/{id}")
+	public String ver(@PathVariable("id") String COD, Map<String, Object> model) {
+		Producto producto = productoService.findById(COD);
+		if(producto==null) {
+			return "redirect:/productoListar";			
+		}
+		model.put("producto",producto);
+		model.put("titulo", "DETALLE DEL PRODUCTO: "+producto.getDESCRIPCION());
+		return "productoDetalle.html";		
+	}
+	
+	@GetMapping("/producto/buscar")
+	public String buscar(
+            @RequestParam(name = "codigoNombre", required = false) String codigoNombre,
+            @RequestParam(name = "codigoClasificacion", required = false) String codigoClasificacion,
+            @RequestParam(name = "codigoMarca", required = false) String codigoMarca,
+            Model model) {
+        List<Producto> encontrados = new ArrayList<>();
+        List<Clasificacion>listClasificacion=clasificacionService.listaClasificacion();
+		List<Marca>listMarca=marcaService.listaMarca();
 
+        if (codigoNombre != null) {
+            if (codigoClasificacion != null && !codigoClasificacion.isEmpty()) {
+                // Filtrar por producto y clasificacion
+                encontrados = productoService.buscarPorCodigoNombreYClasificacion(
+                		codigoNombre, codigoClasificacion);
+            } else {
+                // Filtrar solo por criterio
+                encontrados = productoService.buscarPorCriterio(codigoNombre);
+            }
+
+            if (codigoMarca != null && !codigoMarca.isEmpty()) {
+                // Filtrar adicionalmente por tipo de marca si está presente
+                encontrados = encontrados.stream()
+                        .filter(producto -> producto.getCOD_MARCA().getCOD_MARCA().equals(codigoMarca))
+                        .collect(Collectors.toList());
+            }
+        }
+
+        model.addAttribute("productos", encontrados);
+        model.addAttribute("clasificaciones", listClasificacion);
+		model.addAttribute("marcas", listMarca);
+        model.addAttribute("titulo", "Resultado de búsqueda");
+        return "productos.html";
+    }
 }

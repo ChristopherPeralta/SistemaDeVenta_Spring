@@ -12,12 +12,30 @@ import idat.edu.pe.repositorio.ClasificacionRepository;
 public class ClasificacionImpl implements ClasificacionService{
 
 	@Autowired
-	private ClasificacionRepository repository;
+	private ClasificacionRepository repositorio;
 
 	@Override
 	public List<Clasificacion> listaClasificacion() {
-		return repository.findAll();
+		return repositorio.findAll();
 	}
+
+	@Override
+	public void save(Clasificacion COD) {
+		repositorio.save(COD);		
+	}
+
+	@Override
+	public Clasificacion findById(String COD) {
+        return repositorio.findById(COD).orElse(null);
+	}
+
+	@Override
+	public void softDelete(String COD) {
+		Clasificacion clasificacion = repositorio.findById(COD).orElse(null);
+        if (clasificacion != null) {
+        	clasificacion.setESTADO("Inactivo");
+            repositorio.save(clasificacion);
+        }	}
 	
 	
 }

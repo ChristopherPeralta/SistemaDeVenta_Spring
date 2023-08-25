@@ -10,9 +10,13 @@ public interface EmpleadoService {
 		
 		void save(Empleado empleado);
 
-		public Empleado findById(String COD);
-
-		void deleteById(String COD);
+		void softDelete(String COD_EMPLEADO);
 		
+		public Empleado findById(String COD);
+		
+	    List<Empleado> buscarEmpleadosPorCriterio(String codigoDNIoNombre);
+	    
+	    List<Empleado> buscarEmpleadosPorCriterioYDistrito(String codigoDNIoNombre, String codigoDistrito);
+
 
 }

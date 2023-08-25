@@ -1,65 +1,51 @@
 package idat.edu.pe.controlador;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import idat.edu.pe.entidad.Cargo;
-import idat.edu.pe.entidad.Empleado;
 import idat.edu.pe.entidad.Usuario;
-import idat.edu.pe.servicio.CargoService;
-import idat.edu.pe.servicio.EmpleadoService;
-import idat.edu.pe.servicio.UsuarioService;
+import idat.edu.pe.servicio.UsuarioServicio;
 
 @Controller
 public class UsuarioController {
-
-	@Autowired
-	private UsuarioService usuarioService;
 	
 	@Autowired
-	private EmpleadoService empleadoService;
+	private	UsuarioServicio usuarioServicio;
 	
-	@Autowired
-	private CargoService cargoService;
+	@RequestMapping("/UsuarioLista")
+    public String mostrarListadoUsuarios(Model model) {
+        List<Usuario> usuarios = usuarioServicio.listarUsuarios();
+        model.addAttribute("usuarios", usuarios);
+        
+        model.addAttribute("titulo", "Lista de Usuarios");
+        return "Usuario.html"; 
 	
-	@GetMapping("/usuario/registrar")
-    public String crearProveedorFormulario(Model model) {
-		List<Empleado>listEmpleado=empleadoService.listaEmpleados();
-		List<Cargo>listCargo=cargoService.listaCargo();
-		
-		Usuario usuario = new Usuario();
-		model.addAttribute("titulo", "Registro de Usuario");
-		model.addAttribute("usuario", usuario);
-		model.addAttribute("empleados", listEmpleado);
-        model.addAttribute("cargos", listCargo);   
-    	return "loginRegistrarUsuario";
-    }
+	}
 	
-	@PostMapping("/usuario/guardar")
-	public String guardar(@ModelAttribute Usuario usuario, BindingResult result,Model model){	
-		List<Empleado>listEmpleado=empleadoService.listaEmpleados();
-		List<Cargo>listCargo=cargoService.listaCargo();
+    
+	@GetMapping("/usuario/buscar")
+    public String buscarUsuarios(
+            @RequestParam(name = "codigoNombreApellido", required = false) String codigoNombreApellido,
+            Model model) {
+		List<Usuario> usuariosEncontrados = new ArrayList<>();
 
-
-        if(result.hasErrors()){
-        	model.addAttribute("titulo", "Registro de Usuario");
-            model.addAttribute("usuario", usuario);
-            model.addAttribute("empleados", listEmpleado);
-            model.addAttribute("cargos", listCargo);            
-            System.out.println("Hubo errores en el formulario");
+        if (codigoNombreApellido != null && !codigoNombreApellido.isEmpty()) {
+        	usuariosEncontrados = usuarioServicio.buscarPorCodigoNombreApellido(codigoNombreApellido);
+            model.addAttribute("usuarios", usuariosEncontrados);
+            model.addAttribute("titulo", "Resultado de búsqueda Usuario");
             
-            return "loginRegistrarUsuarioFRM.html";
         }
-        usuarioService.save(usuario);
-        System.out.println("Usuario guardado exitosamente");
-        return "redirect:/login";
+        
+        
+        return "Usuario.html";
+        
+
     }
-	
 }

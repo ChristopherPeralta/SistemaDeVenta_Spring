@@ -30,9 +30,12 @@ public class MarcaImpl implements MarcaService{
 	}
 
 	@Override
-	public void deleteById(String COD) {
-		repositorio.deleteById(COD);
-		
+	public void softDelete(String COD) {
+		Marca marca = repositorio.findById(COD).orElse(null);
+		if (marca != null) {
+			marca.setESTADO("Inactivo");
+            repositorio.save(marca);
+        }
 	}
 	
 	

@@ -14,7 +14,7 @@
 
 <body>
 	
-	<header th:replace="menu::header"></header>
+	<header th:replace="index::header"></header>
 	
 	<main >
 	
@@ -25,9 +25,12 @@
 		        <i class='bx bxs-plus-circle active'></i>
 		      	</a>
 	      	</div>
+	      	<br>
+	      	<a  th:href="@{/exportarPDF}"
+                        class="btn btn-secondary">Exportar a PDF</a>
       <hr>
 		
-		<table class="table table-striped table-bordered">
+		<table class="table table-striped table-bordered table-dark">
 			<thead class="table-dark">
 				<tr>
 					<th>CODIGO</th>
@@ -37,28 +40,49 @@
 					<th>CLIENTE</th>
 					<th>EMPLEADO</th>
 					<th>METODO</th>
-					<th>ACCIONES</th>
+					<th>REPORTE</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="table table-striped table-bordered table-dark text-center">
 				<tr th:each="venta : ${ventas}">
-					<td th:text="${venta.COD_VENTA}">CODIGO</td>
-					<td th:text="${venta.FECHA}">DESCRIPCION</td>
-					
-					<td class="acciones">
-						<a class="btn btn-success btn-sm" th:href="@{/producto/editar/}+${producto.COD}">
-                    		<i class='bx bxs-pencil'></i>
-                  		</a>
-                  		<a class="btn btn-danger btn-sm" th:href="@{/producto/eliminar/}+${producto.COD}" 
-                  		onclick="return confirm('Está seguro de querer eliminar el registro')">
-                    		<i class='bx bxs-trash'></i>
-                  		</a>
-                  		
-                	</td>
-                	
-             		
-			</tbody>
-	
+					<td><button class="btn btn-success" th:text="${venta.COD_VENTA}" type="submit"></button></td>
+					<td th:text="${venta.FECHA}"></td>
+					<td>
+						<table class="table table-bordered">
+							<thead>
+								<tr class="text-center">
+								<!--	<th>Codigo</th>-->
+									<th>Descripcion</th>
+									<th>Venta</th>
+									<th>Cantidad</th>
+								</tr>
+							</thead>
+							<tbody  class="text-center">
+								<tr th:each="producto : ${venta.productos}">
+								<!--	<td th:text="${producto.codigo}"></td>-->
+									<td th:text="${producto.DESCRIPCION}"></td>
+									<td th:text="${producto.precio}"></td>
+									<td th:text="${producto.cantidad}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+										<td th:text="${venta.IMPORTE_TOTAL}"></td>
+										<td th:text="${venta.COD_EMPLEADO.NOMBRE}"></td>
+										<td th:text="${venta.COD_CLIENTE.NOMBRE}"></td>
+										<td th:text="${venta.COD_METODO_PAGO.NOMBRE}"></td>
+										<td>
+											<a class="btn btn-primary"
+			                               	th:href="@{/reporte/generateReport/{ventaId}(ventaId=${venta.COD_VENTA})}">
+			                               	<i class='bx bxs-report'></i></a>
+			                            </td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>						
 	</main>
 	
 	<script src="./js/menu.js"></script>

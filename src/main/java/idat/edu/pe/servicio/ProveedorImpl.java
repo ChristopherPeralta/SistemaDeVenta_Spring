@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import idat.edu.pe.entidad.Empleado;
 import idat.edu.pe.entidad.Proveedor;
 import idat.edu.pe.repositorio.ProveedorRepository;
 
@@ -30,8 +31,22 @@ public class ProveedorImpl implements ProveedorService{
 	}
 
 	@Override
-	public void deleteById(String COD) {
-		repositorio.deleteById(COD);		
+	public void softDelete(String COD) {
+		Proveedor proveedor = repositorio.findById(COD).orElse(null);
+        if (proveedor != null) {
+        	proveedor.setESTADO("Inactivo");
+            repositorio.save(proveedor);
+        }		
 	}
 	
+	@Override
+    public List<Proveedor> buscarProveedoresPorCriterio(String codigoRUCoNombre) {
+        return repositorio.buscarPorCodigoRucNombre(codigoRUCoNombre);
+    }
+
+    @Override
+    public List<Proveedor> buscarProveedoresPorCriterioYDistrito(String codigoRUCoNombre, String codigoDistrito) {
+        return repositorio.buscarPorCodigoRUCoNombreYDistrito(codigoRUCoNombre, codigoDistrito);
+    }
+
 }

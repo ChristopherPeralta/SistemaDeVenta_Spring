@@ -23,6 +23,7 @@ public class EmpleadoImpl implements EmpleadoService{
 
 	@Override
     public void save(Empleado COD) {
+		COD.setESTADO("Activo");
 		repositorio.save(COD);
     }
 
@@ -32,10 +33,28 @@ public class EmpleadoImpl implements EmpleadoService{
     }
 
     @Override
-    public void deleteById(String COD) {
-    	repositorio.deleteById(COD);
+    public void softDelete(String COD_EMPLEADO) {
+        Empleado empleado = repositorio.findById(COD_EMPLEADO).orElse(null);
+        if (empleado != null) {
+            empleado.setESTADO("Inactivo");
+            repositorio.save(empleado);
+        }
     }
+
+
+    @Override
+    public List<Empleado> buscarEmpleadosPorCriterio(String codigoDNIoNombre) {
+        return repositorio.buscarPorCodigoDNIoNombre(codigoDNIoNombre);
+    }
+    
+    @Override
+    public List<Empleado> buscarEmpleadosPorCriterioYDistrito(String codigoDNIoNombre, String codigoDistrito) {
+        return repositorio.buscarPorCodigoDNIoNombreYDistrito(codigoDNIoNombre, codigoDistrito);
+    }
+    
+
 }
+    
 	
 
 	

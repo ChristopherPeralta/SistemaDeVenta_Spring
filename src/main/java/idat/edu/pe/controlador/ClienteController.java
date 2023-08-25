@@ -1,6 +1,9 @@
 package idat.edu.pe.controlador;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import idat.edu.pe.entidad.Cliente;
 import idat.edu.pe.entidad.Distrito;
+import idat.edu.pe.entidad.Empleado;
 import idat.edu.pe.entidad.TipoDocumento;
 import idat.edu.pe.servicio.ClienteService;
 import idat.edu.pe.servicio.DistritoService;
@@ -34,10 +39,18 @@ public class ClienteController {
 	
 	@RequestMapping("/cliente")
 	public String listaClientes(Model model) {
-		List<Cliente>listadoClientes=clienteService.listaClientes();
+		List<Cliente> clientesActivos = clienteService.listaClientes().stream()
+                .filter(cliente -> "Activo".equals(cliente.getESTADO()))
+                .collect(Collectors.toList());
+		List<Distrito>listDistrito=distritoService.listaDistrito();
+		List<TipoDocumento>listTipoDocumento=tipoDocumentoService.listaTipoDocumento();
+
 		
 			model.addAttribute("titulo", "Lista de Clientes");
-			model.addAttribute("clientes", listadoClientes);
+			model.addAttribute("clientes", clientesActivos);
+			model.addAttribute("distritos", listDistrito);
+			model.addAttribute("tipoDocumentos", listTipoDocumento);
+
 
 		return "clientes.html";
 	}
@@ -48,6 +61,7 @@ public class ClienteController {
 		List<TipoDocumento>listTipoDocumento=tipoDocumentoService.listaTipoDocumento();
 		
 		Cliente cliente = new Cliente();
+		cliente.setESTADO("Activo");
 		model.addAttribute("titulo", "Nuevo Cliente");
 		model.addAttribute("cliente", cliente);
 		model.addAttribute("distritos", listDistrito);
@@ -93,8 +107,56 @@ public class ClienteController {
 	@GetMapping("/cliente/eliminar/{id}")
     public String editar(@PathVariable("id") String COD_CLIENTE){
 
-		clienteService.deleteById(COD_CLIENTE);
+		clienteService.softDelete(COD_CLIENTE);
 
 		return "redirect:/cliente";
     }
+	
+	@GetMapping("/clientedetalle/{id}")
+	public String ver(@PathVariable("id") String COD_CLIENTE, Map<String, Object> model) {
+			Cliente cliente = clienteService.findById(COD_CLIENTE);
+		if(cliente==null) {
+			return "redirect:/clienteListar";			
+		}
+		model.put("cliente",cliente);
+		model.put("titulo", "DETALLE DEL CLIENTE: "+cliente.getNOMBRE());
+		return "clienteDetalle.html";		
+	}
+	
+	@GetMapping("/cliente/buscar")
+	public String buscar(
+            @RequestParam(name = "codigoDNIoNombre", required = false) String codigoDNIoNombre,
+            @RequestParam(name = "codigoDistrito", required = false) String codigoDistrito,
+            @RequestParam(name = "codigoTipoDocumento", required = false) String codigoTipoDocumento,
+            Model model) {
+        List<Cliente> encontrados = new ArrayList<>();
+        List<Distrito> listDistrito = distritoService.listaDistrito();
+		List<TipoDocumento>listTipoDocumento=tipoDocumentoService.listaTipoDocumento();
+
+
+        if (codigoDNIoNombre != null) {
+            if (codigoDistrito != null && !codigoDistrito.isEmpty()) {
+                // Filtrar por distrito y criterio
+                encontrados = clienteService.buscarPorCodigoDNIoNombreYDistrito(
+                        codigoDNIoNombre, codigoDistrito);
+            } else {
+                // Filtrar solo por criterio
+                encontrados = clienteService.buscarPorCriterio(codigoDNIoNombre);
+            }
+
+            if (codigoTipoDocumento != null && !codigoTipoDocumento.isEmpty()) {
+                // Filtrar adicionalmente por tipo de documento si está presente
+                encontrados = encontrados.stream()
+                        .filter(cliente -> cliente.getCOD_TIPO_DOCUMENTO().getCOD_TIPO_DOCUMENTO().equals(codigoTipoDocumento))
+                        .collect(Collectors.toList());
+            }
+        }
+
+        model.addAttribute("clientes", encontrados);
+        model.addAttribute("distritos", listDistrito);
+        model.addAttribute("tipoDocumentos", listTipoDocumento);
+        model.addAttribute("titulo", "Resultado de búsqueda de clientes");
+        return "clientes.html";
+    }
+
 }

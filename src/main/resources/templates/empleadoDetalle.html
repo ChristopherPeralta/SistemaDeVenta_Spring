@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Listado de empleados</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="../css/menu.css">
+	<link rel="stylesheet" href="../css/detalle.css">
+    <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
+</head>
+
+<body>
+	
+	<header th:replace="index::header"></header>
+	
+	<main >
+		<div class="container">
+			<div class="titulos">
+				<a class="btn btn-warning btn-sm" th:href="@{/empleado}"><i class='bx bx-arrow-back btn-warning' ></i></a>	
+				<h1 class="text-center" th:text="${titulo}"></h1>
+			</div>
+			
+			<div class="table">
+			  <ul class="header-row ">
+			    <li class="header-cell">CODIGO</li>
+			    <li class="header-cell">DNI</li>
+			    <li class="header-cell">NOMBRE</li>
+			    <li class="header-cell">TELEFONO</li>
+			    <li class="header-cell">DIRECCION</li>
+			    <li class="header-cell">EMAIL</li>
+			    <li class="header-cell">DISTRITO</li>
+			  </ul>
+			  <ul class="data-row">
+			    <li class="cell" th:text="${empleado.COD_EMPLEADO}">CODIGO</li>
+			    <li class="cell" th:text="${empleado.DNI}">DNI</li>
+			    <li class="cell" th:text="${empleado.NOMBRE}">NOMBRE</li>
+			    <li class="cell" th:text="${empleado.TELEFONO}">TELEFONO</li>
+			    <li class="cell" th:text="${empleado.DIRECCION}">DIRECCION</li>
+			    <li class="cell" th:text="${empleado.EMAIL}">EMAIL</li>
+			    <li class="cell" th:text="${empleado.COD_DISTRITO.NOMBRE}">DISTRITO</li>
+			  </ul>
+			</div>
+			
+		</div>
+	</main>
+	<script src="./js/menu.js"></script>
+</body>
+</html>

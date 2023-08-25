@@ -27,37 +27,41 @@ public class ProductoVendido {
 			@Parameter(name = GeneradorCodigo.NUMBER_FORMAT_PARAMETER, value = "%04d")})// LOS DIGITOS SERAN 4 ( MAXIMO = 9999 )	
     private String codigo;
 	
-	@Column(name = "DESCRIPCION", length = 8)
+	@Column(name = "DESCRIPCION", length = 40)
     private String DESCRIPCION;
     
-	@Column(name = "STOCK", length = 40, nullable = false)
-    private Float STOCK;
+	@Column(name = "cantidad", length = 40, nullable = false)
+    private int cantidad;
     
-    @Column(name = "PRECIO_VENTA", length = 9)
-    private Float PRECIO_VENTA;
+    @Column(name = "precio", length = 9)
+    private Float precio;
 	
 	@ManyToOne
-	@JoinColumn(name="CodVenta") // RENOMBRE DE LA COLUMNA POR CODVENTA
+	@JoinColumn(name="COD_VENTA") // RENOMBRE DE LA COLUMNA POR CODVENTA
 	private Venta venta; // ATRIBUTO VENTA
 	
 	
 	
-	
-	public ProductoVendido(String dESCRIPCION, Float sTOCK, Float pRECIO_VENTA, Venta venta) {
+	public ProductoVendido(String dESCRIPCION, int i, Float Precio, Venta venta) {
 		this.DESCRIPCION = dESCRIPCION;
-		this.STOCK = sTOCK;
-		this.PRECIO_VENTA = pRECIO_VENTA;
+		this.cantidad = i;
+		this.precio = Precio;
 		this.venta = venta;
-	}
+		}
+
+	
 
 	public ProductoVendido() {
 		
 	}
 	
+
+
 	public Float getTotal() {
-		return this.STOCK * this.PRECIO_VENTA;
+		return this.cantidad * this.precio;
 	}
 
+	
 	public String getCodigo() {
 		return codigo;
 	}
@@ -74,20 +78,14 @@ public class ProductoVendido {
 		DESCRIPCION = dESCRIPCION;
 	}
 
-	public Float getSTOCK() {
-		return STOCK;
+
+
+	public Float getPrecio() {
+		return precio;
 	}
 
-	public void setSTOCK(Float sTOCK) {
-		STOCK = sTOCK;
-	}
-
-	public Float getPRECIO_VENTA() {
-		return PRECIO_VENTA;
-	}
-
-	public void setPRECIO_VENTA(Float pRECIO_VENTA) {
-		PRECIO_VENTA = pRECIO_VENTA;
+	public void setPrecio(Float precio) {
+		this.precio = precio;
 	}
 
 	public Venta getVenta() {
@@ -96,6 +94,14 @@ public class ProductoVendido {
 
 	public void setVenta(Venta venta) {
 		this.venta = venta;
+	}
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
 	}
 	
 	

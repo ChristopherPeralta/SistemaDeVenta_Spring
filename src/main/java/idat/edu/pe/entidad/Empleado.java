@@ -1,5 +1,6 @@
 package idat.edu.pe.entidad;
 
+
 import java.util.List;
 import java.util.Set;
 
@@ -59,20 +60,16 @@ public class Empleado {
     @OneToMany(mappedBy = "COD_EMPLEADO", cascade = CascadeType.ALL)
 	private Set<Venta> Venta;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "COD_EMPLEADO"/* NOMBRE DE LA TABLA */, cascade = CascadeType.ALL)
+    /*  @OneToMany(fetch = FetchType.LAZY, mappedBy = "COD_EMPLEADO", cascade = CascadeType.ALL)
     List<Usuario> COD_USUARIO;
 
-    
-    
-	
-    
 	public List<Usuario> getCOD_USUARIO() {
 		return COD_USUARIO;
 	}
 
 	public void setCOD_USUARIO(List<Usuario> cOD_USUARIO) {
 		COD_USUARIO = cOD_USUARIO;
-	}
+	}*/
 
 	public Set<Venta> getVenta() {
 		return Venta;

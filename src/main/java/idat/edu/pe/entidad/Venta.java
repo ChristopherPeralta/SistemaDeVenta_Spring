@@ -1,6 +1,6 @@
 package idat.edu.pe.entidad;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -53,24 +53,12 @@ public class Venta {
 	@JoinColumn(name="COD_METODO_PAGO") 
 	private MetodoPago COD_METODO_PAGO; 
 	
-	@OneToMany(mappedBy = "COD_DETALLEVENTA", cascade = CascadeType.ALL)
-	private List<DetalleVenta> detalleVenta;
+	@OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+	private Set<ProductoVendido> productos;
 
-	
-	public Float getTotal() {
-		Float total = 0f;
-		for (DetalleVenta productoVendido: this.detalleVenta) {
-			total += productoVendido.getTotal();
-		}
-		return total;
-	}
-	
 	public Venta() {
 		this.FECHA = GeneradorFecha.obtenerFechaYHoraActual();
 	}
-
-	
-	
 
 	public Empleado getCOD_EMPLEADO() {
 		return COD_EMPLEADO;
@@ -116,7 +104,11 @@ public class Venta {
 	}
 
 
-	public String getIMPORTE_TOTAL() {
+	public Float getIMPORTE_TOTAL() {
+		Float IMPORTE_TOTAL = 0f;
+		for (ProductoVendido productoVendido: this.productos) {
+			IMPORTE_TOTAL += productoVendido.getTotal();
+		}
 		return IMPORTE_TOTAL;
 	}
 
@@ -135,13 +127,15 @@ public class Venta {
 		ESTADO = eSTADO;
 	}
 
-	public List<DetalleVenta> getDetalleVenta() {
-		return detalleVenta;
+	public Set<ProductoVendido> getProductos() {
+		return productos;
 	}
 
-	public void setDetalleVenta(List<DetalleVenta> detalleVenta) {
-		this.detalleVenta = detalleVenta;
+	public void setProductos(Set<ProductoVendido> productos) {
+		this.productos = productos;
 	}
+
+	
 
 
 

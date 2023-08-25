@@ -6,27 +6,63 @@
 	<title>Listado de empleados</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="./css/menu.css">
-	<link rel="stylesheet" href="./css/tablas.css">
+	<link rel="stylesheet" href="../css/menu.css">
+	<link rel="stylesheet" href="../css/tablas.css">
     <link rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
 </head>
 
 <body>
 	
-	<header th:replace="menu::header"></header>
+	<header th:replace="index::header"></header>
 	
 	<main >
 		<div class="container">
+			
+			<div class="titulos">
+				<div th:if="${#httpServletRequest.requestURI == '/cliente/buscar'}">
+					<a class="btn btn-warning btn-sm" th:href="@{/cliente}"><i class='bx bx-arrow-back btn-warning' ></i></a>
+				</div>
+				<h1 class="text-center" th:text="${titulo}"></h1>
+			</div>
 			<div class="agregar">
-				<h1 th:text="${titulo}"></h1>
-				<a th:href="@{/cliente/registrar}" title="Crear nuevo registro">
-		        <i class='bx bxs-plus-circle active'></i>
-		      	</a>
+				
+				<div class="buscar">
+                    <form action="/cliente/buscar" method="get">
+                        <input type="text" id="codigoDNIoNombre" name="codigoDNIoNombre"
+                            th:value="${param.codigoDNIoNombre}" placeholder="Código, #Doc. o Nombre">
+
+                        <select id="codigoTipoDocumento" name="codigoTipoDocumento">
+                            <option value="">Selecciona el Tipo de Documento</option>
+                            <option th:each="tipo : ${tipoDocumentos}" th:value="${tipo.COD_TIPO_DOCUMENTO}"
+                                th:text="${tipo.NOMBRE}"></option>
+                        </select>
+
+                        <select id="codigoDistrito" name="codigoDistrito">
+                            <option value="">Selecciona el Distrito</option>
+                            <option th:each="distrito : ${distritos}" th:value="${distrito.COD_DISTRITO}"
+                                th:text="${distrito.NOMBRE}"></option>
+                        </select>
+
+                        <button type="submit" class="circular-button"><i class='bx bx-search'></i></button>
+                    </form>
+                </div>
+
+
+
+
+
+				
+				<a th:href="@{/cliente/registrar}" >
+					<i class='bx bxs-plus-circle active'></i></a>
+	      		</a>
+	      		
+	      		
 	      	</div>
-      <hr>
+	      	
+      	<hr>
 		
-		<table class="table table-striped table-bordered">
+		<table class="table table-striped table-bordered table-dark">
 			<thead class="table-dark">
 				<tr>
 					<th>CODIGO</th>
@@ -40,9 +76,11 @@
 					<th>ACCIONES</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="table table-striped table-bordered table-dark text-center">
 				<tr th:each="cliente : ${clientes}">
-					<td th:text="${cliente.COD_CLIENTE}">CODIGO</td>
+					<td><a class="btn btn-success"
+						th:href="@{/cliente}+@{detalle/}+${cliente.COD_CLIENTE}" 
+						th:text="${cliente.COD_CLIENTE}">CODIGO</td>
 					<td th:text="${cliente.COD_TIPO_DOCUMENTO.NOMBRE}">TIPO_DOCUMENTO</td>
 					<td th:text="${cliente.NUMERO_DOCUMENTO}">CODIGO</td>
 					<td th:text="${cliente.NOMBRE}">NOMBRE</td>

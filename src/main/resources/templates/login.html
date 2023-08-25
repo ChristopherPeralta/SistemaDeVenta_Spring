@@ -15,19 +15,24 @@
             <h2 class="lblIniciaSesion">Inicia tu sesion</h2>
         </div>
 
-
         <div class="containerRight">
             <main>
-                <form class = "form" action="/menu" method="post">
+                <form class="form" th:action="@{/login}" method="post">
                     <h2 class="lblLogin">Login</h2>
                     
                     <div class="inputs">
-                        <input type="text" name="usuario" class="box" placeholder="Ingresa tu correo">
-                        <input type="password" name="contraseña" class="box" placeholder="Ingresa tu contraseña" required>
-                        <input type="submit" value="ingresar" class="submit"> 
-                        <a href="loginRecuperarContraseña.html">¿Olvidaste tu contraseña?</a>
+                        <input id="username"  name="username" type="text" class="box"
+							required autofocus="autofocus" placeholder="Ingresa tu correo">
+							
+                        <input
+							id="password" type="password"  name="password" class="box" required
+							autofocus="autofocus" placeholder="Ingresa tu contraseña">
+							
+                        <input type="submit" class="submit" name="login-submit" id="login-submit"
+									value="Iniciar sesión" />
+                        <a th:href="@{/restablecer-contrasena}">¿Olvidaste tu contraseña?</a>
                         <br>
-                        <a th:href="@{/usuario/registrar}">¿No tienes cuenta?. Regístrate</a>  
+                        <a th:href="@{/registro}">¿No tienes cuenta?. Regístrate</a>  
                     </div>
                 </form>
             </main>
@@ -35,7 +40,10 @@
     
     </div>
 	
-	<p th:text="${error}"></p>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
 	
 	
 

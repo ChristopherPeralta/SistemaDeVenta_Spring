@@ -4,9 +4,9 @@ public class ProductoParaVender extends Producto{
 
 	private int cantidad;
 
-    public ProductoParaVender(String COD, String DESCRIPCION, Float PRECIO_VENTA, Float STOCK, int i) {
-        super(COD, DESCRIPCION, PRECIO_VENTA, STOCK);
-        this.cantidad = i;
+    public ProductoParaVender(String COD, String DESCRIPCION,Float STOCK , Float PRECIO_VENTA, int cantidad) {
+        super(COD, DESCRIPCION,STOCK, PRECIO_VENTA );
+        this.cantidad = cantidad;
     }
 
 	public void aumentarCantidad() {
@@ -22,6 +22,6 @@ public class ProductoParaVender extends Producto{
     }
 
     public Float getTotal() {
-        return this.getPRECIO_VENTA() * this.cantidad;
+        return this.getSTOCK() * this.cantidad;
     }
 }

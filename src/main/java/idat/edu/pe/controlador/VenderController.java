@@ -85,15 +85,16 @@ public class VenderController {
         Venta v = ventasRepository.save(venta);
 
         for (ProductoParaVender productoParaVender : carrito) {
-
+        	
             Producto p = productosRepository.findFirstByCOD(productoParaVender.getCOD());
             if (p == null) continue; 
-            //p.restarStock(productoParaVender.getCantidad());
+            p.restarStock(productoParaVender.getCantidad());
             productosRepository.save(p);
+            
             ProductoVendido productoVendido = new ProductoVendido(
             		productoParaVender.getDESCRIPCION(),
-            		productoParaVender.getSTOCK(), 
-            		productoParaVender.getPRECIO_VENTA(),
+            		productoParaVender.getCantidad(),
+            		productoParaVender.getSTOCK(),
             		v);
             productosVendidosRepository.save(productoVendido);
         }

@@ -13,7 +13,7 @@
 </head>
 
 <body>
-	<header th:replace="menu::header"></header>
+	<header th:replace="index::header"></header>
 	
 	<main>
 		
@@ -51,8 +51,8 @@
 						
 						<div class="form-row">
 							<div class="form-group col-sm">	
-								<label>Stock : </label>
-								<input type="text" name="STOCK" th:field="*{STOCK}" class="form-control" placeholder="Ingrese el stock" required>
+								<label>Stock Seguridad: </label>
+								<input type="text" name="STOCK_SEGURIDAD" th:field="*{STOCK_SEGURIDAD}" class="form-control" placeholder="Ingrese el stock de seguridad" required>
 							</div>	
 							
 							<div class="form-group col-sm">	
@@ -67,7 +67,7 @@
 						</div>
 						
 						<input type="hidden" th:field="*{ESTADO}" value="ACTIVO">
-						
+						<input type="hidden" th:field="*{STOCK}" value="0">
 			         	
 			         	<div class="botones">				
 							<button class="btn btn-success">Guardar</button>

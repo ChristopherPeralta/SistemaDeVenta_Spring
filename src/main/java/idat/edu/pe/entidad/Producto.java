@@ -1,8 +1,6 @@
 package idat.edu.pe.entidad;
 
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -33,8 +32,13 @@ public class Producto {
 	@Column(name = "DESCRIPCION", length = 50)
     private String DESCRIPCION;
     
-	@Column(name = "STOCK", length = 40, nullable = false)
+	@Column(name = "STOCK", length = 40, nullable = false, columnDefinition = "integer default 0")
     private Float STOCK;
+	
+	@Column(name="STOCK_SEGURIDAD") // RENOMBRE DE LA COLUMNA POR STOCKMINIMO
+	@Min(2) // CANTIDAD MINIMO 2
+	@Max(999) // CANTIDAD MAXIMA 999
+	private Integer STOCK_SEGURIDAD; // ATRIBUTO MINIMO
     
     @Column(name = "PRECIO_VENTA", length = 9)
     private Float PRECIO_VENTA;
@@ -53,18 +57,25 @@ public class Producto {
     @JoinColumn(name = "COD_MARCA")
     private Marca COD_MARCA;
     
-    @OneToMany(mappedBy = "COD", cascade = CascadeType.ALL)
-	private List<DetalleVenta> detalleVenta;
-
     
     //FUNCIONES
-    //public boolean stockmin() {
-		//return this.STOCK <= this.minimo;
-	//}
+    public boolean stockmin() {
+		return this.STOCK <= this.STOCK_SEGURIDAD;
+	}
+
+    public void restarStock(int STOCK) {
+		this.STOCK -= STOCK;
+	}
+    
+    public void sumarStock(int STOCK) {
+		this.STOCK += STOCK;
+	}
 
 	public boolean sinStock() {
 		return this.STOCK <= 0;
 	}
+	
+	
 
     public Producto(String cOD_PRODUCTO, String dESCRIPCION, Float sTOCK, Float pRECIO_VENTA) {
 		super();
@@ -141,15 +152,14 @@ public class Producto {
 		COD_MARCA = cOD_MARCA;
 	}
 
-	public List<DetalleVenta> getDetalleVenta() {
-		return detalleVenta;
+	public Integer getSTOCK_SEGURIDAD() {
+		return STOCK_SEGURIDAD;
 	}
 
-	public void setDetalleVenta(List<DetalleVenta> detalleVenta) {
-		this.detalleVenta = detalleVenta;
+	public void setSTOCK_SEGURIDAD(Integer sTOCK_SEGURIDAD) {
+		STOCK_SEGURIDAD = sTOCK_SEGURIDAD;
 	}
 
 	
-
 	
 }

@@ -3,70 +3,114 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Listado de empleados</title>
+	<title>Listado de productos</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="./css/menu.css">
-	<link rel="stylesheet" href="./css/tablas.css">
+	<link rel="stylesheet" href="../css/menu.css">
+	<link rel="stylesheet" href="../css/tablas.css">
     <link rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
 </head>
 
 <body>
 	
-	<header th:replace="menu::header"></header>
+	<header th:replace="index::header"></header>
 	
 	<main >
 	
 	<div class="container">
+			
+		<div class="row">
+            <div class="col-md-6"> <!-- Utilizamos col-md-6 para dividir el espacio a la mitad en pantallas medianas y grandes -->
+                <!-- Botón de Clasificación -->
+                <a th:href="@{/clasificacion}" class="btn btn-success btn-block">Clasificación</a> <!-- btn-block hace que el botón ocupe todo el ancho disponible -->
+            </div>
+            <div class="col-md-6"> <!-- Utilizamos col-md-6 para dividir el espacio a la mitad en pantallas medianas y grandes -->
+                <!-- Botón de Marca -->
+                <a th:href="@{/marca}" class="btn btn-success btn-block">Marca</a> <!-- btn-block hace que el botón ocupe todo el ancho disponible -->
+            </div>
+        </div>
+        <br>
+
+			<div class="titulos">
+				<div th:if="${#httpServletRequest.requestURI == '/producto/buscar'}">
+					<a class="btn btn-warning btn-sm" th:href="@{/producto}"><i class='bx bx-arrow-back btn-warning' ></i></a>
+				</div>
+				<h1 class="text-center" th:text="${titulo}"></h1>
+			</div>
+			
 			<div class="agregar">
-				<h1 th:text="${titulo}"></h1>
+				<div class="buscar">
+                    <form action="/producto/buscar" method="get">
+                        <input type="text" id="codigoNombre" name="codigoNombre"
+                            th:value="${param.codigoNombre}" placeholder="Código o Nombre">
+
+                        <select id="codigoClasificacion" name="codigoClasificacion">
+                            <option value="">Selecciona la clasificacion</option>
+                            <option th:each="clasificacion : ${clasificaciones}" th:value="${clasificacion.COD_CLASIFICACION}"
+                                th:text="${clasificacion.NOMBRE}"></option>
+                        </select>
+
+                        <select id="codigoMarca" name="codigoMarca">
+                            <option value="">Selecciona la marca</option>
+                            <option th:each="marca : ${marcas}" th:value="${marca.COD_MARCA}"
+                                th:text="${marca.NOMBRE}"></option>
+                        </select>
+
+                        <button type="submit" class="circular-button"><i class='bx bx-search'></i></button>
+                    </form>
+                </div>
+                
 				<a th:href="@{/producto/registrar}" title="Crear nuevo registro">
 		        <i class='bx bxs-plus-circle active'></i>
 		      	</a>
 	      	</div>
       <hr>
 		
-		<table class="table table-striped table-bordered">
-			<thead class="table-dark">
-				<tr>
-					<th>CODIGO</th>
-					<th>DESCRIPCION</th>
-					<th>STOCK</th>
-					<th>PRECIO_VENTA</th>
-					<th>PRECIO_COMPRA</th>
-					<th>CLASIFICACION</th>
-					<th>MARCA</th>
-					<th>ACCIONES</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="producto : ${productos}">
-					<td th:text="${producto.COD}">CODIGO</td>
-					<td th:text="${producto.DESCRIPCION}">DESCRIPCION</td>
-					<td th:text="${producto.STOCK}">STOCK</td>
-					<td th:text="${producto.PRECIO_VENTA}">PRECIO_VENTA</td>
-					<td th:text="${producto.PRECIO_COMPRA}">PRECIO_COMPRA</td>
-					<td th:text="${producto.COD_CLASIFICACION.NOMBRE}">CLASIFICACION</td>
-					<td th:text="${producto.COD_MARCA.NOMBRE}">MARCA</td>
-					
-					
-					
-					<td class="acciones">
-						<a class="btn btn-success btn-sm" th:href="@{/producto/editar/}+${producto.COD}">
-                    		<i class='bx bxs-pencil'></i>
-                  		</a>
-                  		<a class="btn btn-danger btn-sm" th:href="@{/producto/eliminar/}+${producto.COD}" 
-                  		onclick="return confirm('Está seguro de querer eliminar el registro')">
-                    		<i class='bx bxs-trash'></i>
-                  		</a>
-                  		
-                	</td>
-                	
-             		
-			</tbody>
-	
-	</main>
+		<table class="table table-striped table-bordered table-dark">
+    <thead class="table-dark">
+        <tr>
+            <th rowspan="2" class="vertical-center">CODIGO</th>
+            <th rowspan="2" class="vertical-center">DESCRIPCION</th>
+            <th colspan="2" class="vertical-center">STOCK</th>
+            <th colspan="2" class="vertical-center">PRECIO</th>
+            <th rowspan="2" class="vertical-center">TIPO</th>
+            <th rowspan="2" class="vertical-center">MARCA</th>
+            <th rowspan="2" class="vertical-center">ACCIONES</th>
+        </tr>
+        <tr>
+            <th class="vertical-center">CANTIDAD</th>
+            <th class="vertical-center">SEGURIDAD</th>
+            <th class="vertical-center">VENTA</th>
+            <th class="vertical-center">COMPRA</th>
+        </tr>
+    </thead>
+            
+    <tbody class="table table-striped table-bordered table-dark text-center">
+        <tr th:each="producto : ${productos}" 
+            th:class="${producto.STOCK_SEGURIDAD} >= ${producto.STOCK} ? 'table-danger-row' : ''">
+            <td><a class="btn btn-success"
+                th:href="@{/producto}+@{detalle/}+${producto.COD}"
+                th:text="${producto.COD}">CODIGO</td>
+            <td th:text="${producto.DESCRIPCION}">DESCRIPCION</td>
+            <td th:text="${producto.STOCK}">STOCK</td>
+            <td th:text="${producto.STOCK_SEGURIDAD}">STOCK_SEGURIDAD</td>
+            <td th:text="${producto.PRECIO_VENTA}">PRECIO_VENTA</td>
+            <td th:text="${producto.PRECIO_COMPRA}">PRECIO_COMPRA</td>
+            <td th:text="${producto.COD_CLASIFICACION.NOMBRE}">CLASIFICACION</td>
+            <td th:text="${producto.COD_MARCA.NOMBRE}">MARCA</td>
+            <td class="acciones">
+                <a class="btn btn-success btn-sm" th:href="@{/producto/editar/}+${producto.COD}">
+                    <i class='bx bxs-pencil'></i>
+                </a>
+                <a class="btn btn-danger btn-sm" th:href="@{/producto/eliminar/}+${producto.COD}" 
+                onclick="return confirm('Está seguro de querer eliminar el registro')">
+                    <i class='bx bxs-trash'></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
 	
 	<script src="./js/menu.js"></script>
 </body>

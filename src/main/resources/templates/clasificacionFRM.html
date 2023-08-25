@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Listado de empleados</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/menu.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/frm.css}">
+    <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
+</head>
+
+<body>
+	<header th:replace="index::header"></header>
+	
+	<main>
+		
+		<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-contetnt-center card">
+				<div class="titulos">
+					
+					<a class="btn btn-warning btn-sm" th:href="@{/clasificacion}"><i class='bx bx-arrow-back btn-warning' ></i></a>
+					
+					<h1 class="text-center" th:text="${titulo}"></h1>
+				</div>
+				<div class="card-body">
+					<form th:Action="@{/clasificacion/guardar}" th:object="${clasificacion}" method="POST">
+		
+						<div class="form-group">
+							<label>Nombre : </label>
+							<input type="text" name="NOMBRE" th:field="*{NOMBRE}" class="form-control" placeholder="Ingrese el Nombre de la clasificacion" required>
+						</div>
+						
+						<input type="hidden" th:field="*{ESTADO}" value="ACTIVO">
+						
+						<div class="botones">				
+								<button class="btn btn-success">Guardar</button>
+								
+								<button class="btn btn-danger" th:href="@{/empleado}" onclick="return confirm('Está seguro de querer cancelar el registro')">Cancelar</button>					
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		</div>
+
+	</main>
+	<script th:src="@{/js/menu.js}"></script>
+</body>
+</html>	

@@ -1,91 +1,141 @@
 package idat.edu.pe.entidad;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "USUARIO")
+@Table(name = "usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Usuario {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "nombre")
+	private String nombre;
+
+	@Column(name = "apellido")
+	private String apellido;
+
+	@Column(name = "email")
+	private String email;
+	
+	private String password;
+	
+	@Column(name = "token")
+    private String token;
+	
+	@Column(name = "token_expiration")
+    private LocalDateTime tokenExpiration;
+	
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "usuarios_roles",
+			joinColumns = @JoinColumn(name = "usuario_id",referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "rol_id",referencedColumnName = "id")
+			)
+	private Collection<Rol> roles;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Collection<Rol> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Rol> roles) {
+		this.roles = roles;
+	}
+
+	public Usuario(Long id, String nombre, String apellido, String email, String password, Collection<Rol> roles) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+	}
+
+	public Usuario(String nombre, String apellido, String email, String password, Collection<Rol> roles) {
+		super();
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+	}
+
+	public Usuario() {
+		
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public LocalDateTime getTokenExpiration() {
+		return tokenExpiration;
+	}
+
+	public void setTokenExpiration(LocalDateTime tokenExpiration) {
+		this.tokenExpiration = tokenExpiration;
+	}
 	
 	
-    @Id
-    @Column(name = "COD_USUARIO", length = 6)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generador_usuario") // GENERADOR PARA EL CODIGO
-	@GenericGenerator(name="generador_usuario",
-	strategy = "idat.edu.pe.entidad.GeneradorCodigo", parameters= { // IMPORTAMOS LA CLASE DEL GENERADOR	
-			@Parameter(name = GeneradorCodigo.INCREMENT_PARAM, value = "1"),  // EMPEZARA EN EL NUMERO 1 Y AVANZARA DE UNO EN UNO
-			@Parameter(name = GeneradorCodigo.VALUE_PREFIX_PARAMETER, value = "US"),  // EL PREFIJO SERA E
-			@Parameter(name = GeneradorCodigo.NUMBER_FORMAT_PARAMETER, value = "%04d")})// LOS DIGITOS SERAN 4 ( MAXIMO = 9999 )	
-    private String COD_USUARIO;
-    
-    
-    @Column(name = "USUARIO", length = 40, nullable = false, unique = true)
-    private String usuario;
-    
-    @Column(name = "CONTRASEÑA", length = 40, nullable = false)
-    private String contraseña;
-    
-    @ManyToOne
-    @JoinColumn(name = "COD_CARGO")
-    private Cargo COD_CARGO;
 
-    @ManyToOne
-    @JoinColumn(name = "COD_EMPLEADO")
-    private Empleado COD_EMPLEADO;
-
-	public String getCOD_USUARIO() {
-		return COD_USUARIO;
-	}
-
-	public void setCOD_USUARIO(String cOD_USUARIO) {
-		COD_USUARIO = cOD_USUARIO;
-	}
-
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
-	public String getContraseña() {
-		return contraseña;
-	}
-
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
-	}
-
-	public Cargo getCOD_CARGO() {
-		return COD_CARGO;
-	}
-
-	public void setCOD_CARGO(Cargo cOD_CARGO) {
-		COD_CARGO = cOD_CARGO;
-	}
-
-	public Empleado getCOD_EMPLEADO() {
-		return COD_EMPLEADO;
-	}
-
-	public void setCOD_EMPLEADO(Empleado cOD_EMPLEADO) {
-		COD_EMPLEADO = cOD_EMPLEADO;
-	}
-
-    
-	
-    
-    
-    
 }

@@ -11,5 +11,10 @@ public interface ClienteService {
 
 	public Cliente findById(String COD);
 
-	void deleteById(String COD);
+	void softDelete(String COD);
+	
+	List<Cliente> buscarPorCriterio(String codigoDNIoNombre);
+
+    List<Cliente> buscarPorCodigoDNIoNombreYDistrito(String codigoDNIoNombre, String codigoDistrito);
+
 }

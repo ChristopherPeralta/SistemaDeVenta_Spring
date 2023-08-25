@@ -1,6 +1,6 @@
 package idat.edu.pe.entidad;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -56,17 +56,10 @@ public class Cliente {
     @JoinColumn(name = "COD_TIPO_DOCUMENTO")
     private TipoDocumento COD_TIPO_DOCUMENTO;
     
-    @OneToMany(mappedBy = "COD_VENTA", cascade = CascadeType.ALL)
-	private Set<Venta> Venta;
+    @OneToMany(mappedBy = "COD_CLIENTE", cascade = CascadeType.ALL)
+	private List<Venta> venta;
 
-	public Set<Venta> getVenta() {
-		return Venta;
-	}
-
-	public void setVenta(Set<Venta> venta) {
-		Venta = venta;
-	}
-
+	
 	public String getCOD_CLIENTE() {
 		return COD_CLIENTE;
 	}
