@@ -16,12 +16,14 @@ import idat.edu.pe.entidad.Empleado;
 public interface EmpleadoRepository extends JpaRepository<Empleado, String> {
 	
 	@Query("SELECT e FROM Empleado e WHERE "
-	           + "(e.COD_EMPLEADO LIKE %:codigoDNIoNombre% OR e.DNI LIKE %:codigoDNIoNombre% OR e.NOMBRE LIKE %:codigoDNIoNombre%)")
+	           + "(e.COD_EMPLEADO LIKE %:codigoDNIoNombre% OR e.DNI LIKE %:codigoDNIoNombre% OR e.NOMBRE LIKE %:codigoDNIoNombre%)"
+			   + "AND (e.ESTADO='Activo')")
 	List<Empleado> buscarPorCodigoDNIoNombre(@Param("codigoDNIoNombre") String codigoDNIoNombre);
 	
 	@Query("SELECT e FROM Empleado e WHERE "
 		       + "(e.COD_EMPLEADO LIKE %:codigoDNIoNombre% OR e.DNI LIKE %:codigoDNIoNombre% OR e.NOMBRE LIKE %:codigoDNIoNombre%)"
-		       + "AND (:codigoDistrito IS NULL OR e.COD_DISTRITO.COD_DISTRITO = :codigoDistrito)")
+		       + "AND (:codigoDistrito IS NULL OR e.COD_DISTRITO.COD_DISTRITO = :codigoDistrito)"
+			   + "AND (e.ESTADO='Activo')")
 		List<Empleado> buscarPorCodigoDNIoNombreYDistrito(@Param("codigoDNIoNombre") String codigoDNIoNombre, @Param("codigoDistrito") String codigoDistrito);
 	
 }
