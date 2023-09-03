@@ -13,7 +13,8 @@ import idat.edu.pe.entidad.Compra;
 public interface CompraRepository extends JpaRepository<Compra, String>{
 	
 	@Query("SELECT c FROM Compra c WHERE" 
-	           + "(c.COD_COMPRA LIKE %:codigoProveedor% OR c.COD_PROVEEDOR.COD_PROVEEDOR LIKE %:codigoProveedor%)")
+	           + "(c.COD_COMPRA LIKE %:codigoProveedor% OR c.COD_PROVEEDOR.COD_PROVEEDOR LIKE %:codigoProveedor%)"
+			   + "AND (c.ESTADO='Activo')")
 	    List<Compra> findComprasByCodigoYProveedor(
 	        @Param("codigoProveedor") String codigoProveedor);
 
