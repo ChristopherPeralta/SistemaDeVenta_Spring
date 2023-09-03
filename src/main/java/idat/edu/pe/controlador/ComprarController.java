@@ -2,6 +2,7 @@ package idat.edu.pe.controlador;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +28,7 @@ import idat.edu.pe.repositorio.ProductoCompradoRepository;
 import idat.edu.pe.repositorio.ProductoRepository;
 import idat.edu.pe.servicio.EmpleadoService;
 import idat.edu.pe.servicio.MetodoPagoService;
+import idat.edu.pe.servicio.ProductoService;
 import idat.edu.pe.servicio.ProveedorService;
 
 @Controller
@@ -50,6 +52,9 @@ public class ComprarController {
     
     @Autowired
     private MetodoPagoService metodoServicio;
+    
+    @Autowired
+    private ProductoService productoServicio;
     
     @PostMapping(value = "/quitar/{indice}")
     public String quitarDelCarrito(@PathVariable int indice, HttpServletRequest request) {
@@ -122,8 +127,16 @@ public class ComprarController {
     @GetMapping(value = "/")
     public String interfazVender(Model model, HttpServletRequest request) {
     	List<MetodoPago> listaPagos = metodoServicio.listaMetodoPago();
-    	List<Empleado> listaEmpleados = empleadoServicio.listaEmpleados();
-    	List<Proveedor> listaProveedores = proveedorServicio.listaProveedor();
+    	List<Empleado> listaEmpleados = empleadoServicio.listaEmpleados().stream()
+                .filter(empleado -> "Activo".equals(empleado.getESTADO()))
+                .collect(Collectors.toList());
+    	List<Proveedor> listaProveedores = proveedorServicio.listaProveedor().stream()
+                .filter(proveedor -> "Activo".equals(proveedor.getESTADO()))
+                .collect(Collectors.toList());
+    	List<Producto> listaProducto = productoServicio.listaProductos().stream()
+                .filter(producto -> "Activo".equals(producto.getESTADO()))
+                .collect(Collectors.toList());
+    	
     	model.addAttribute("compra", new Compra());
         model.addAttribute("producto", new Producto());
         float total = 0;
@@ -131,7 +144,7 @@ public class ComprarController {
         for (ProductoParaComprar p: carrito) total += p.getTotal();
         model.addAttribute("titulo", "REGISTRAR COMPRA");
         model.addAttribute("total", total);
-        model.addAttribute("productos", productosRepository.findAll());
+        model.addAttribute("productos", listaProducto);
         model.addAttribute("pagos", listaPagos);
         model.addAttribute("empleados", listaEmpleados);
         model.addAttribute("proveedores", listaProveedores);
