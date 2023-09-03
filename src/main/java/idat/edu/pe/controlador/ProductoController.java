@@ -55,8 +55,12 @@ public class ProductoController {
 	
 	@GetMapping("/producto/registrar")
 	public String crearProductoFormulario(Model model) {
-		List<Marca>listMarca=marcaService.listaMarca();
-		List<Clasificacion>listClasificacion=clasificacionService.listaClasificacion();
+		List<Marca>listMarca=marcaService.listaMarca().stream()
+                .filter(marca -> "Activo".equals(marca.getESTADO()))
+                .collect(Collectors.toList());
+		List<Clasificacion>listClasificacion=clasificacionService.listaClasificacion().stream()
+                .filter(clasificacion -> "Activo".equals(clasificacion.getESTADO()))
+                .collect(Collectors.toList());
 		
 		Producto producto = new Producto();
 		producto.setESTADO("Activo");
