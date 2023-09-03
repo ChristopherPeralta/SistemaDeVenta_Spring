@@ -1,11 +1,6 @@
 package idat.edu.pe.controlador;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 /*import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;*/
@@ -16,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import idat.edu.pe.entidad.Usuario;
-import idat.edu.pe.servicio.UsuarioService;
+import idat.edu.pe.servicio.UsuarioServicio;
 
 @Controller
 public class LoginController {
@@ -25,7 +20,7 @@ public class LoginController {
 	private SessionRegistry sessionRegistry;*/
 	
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuarioServicio usuarioService;
 
     // Método para mostrar el formulario de inicio de sesión
     @GetMapping("/login")
@@ -43,9 +38,9 @@ public class LoginController {
     public String login(@RequestParam String usuario, @RequestParam String contraseña, Model model) {
         Usuario logeo = usuarioService.getLogeoByUsuario(usuario);
         
-        if (logeo != null && logeo.getContraseña().equals(contraseña)) {
+        if (logeo != null && logeo.getPassword().equals(contraseña)) {
             // Inicio de sesión exitoso
-            model.addAttribute("usuario", logeo.getUsuario());
+            model.addAttribute("usuario", logeo.getEmail());
 
             return "menu.html";
         } else {
