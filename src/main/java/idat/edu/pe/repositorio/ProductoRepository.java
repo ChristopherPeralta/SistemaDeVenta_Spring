@@ -17,11 +17,13 @@ public interface ProductoRepository extends JpaRepository<Producto, String> {
 
 	@Query("SELECT p FROM Producto p WHERE "
 	            + "(p.COD LIKE %:codigoNombre% OR p.DESCRIPCION LIKE %:codigoNombre%) "
-	            + "AND (:codigoClasificacion IS NULL OR p.COD_CLASIFICACION.COD_CLASIFICACION = :codigoClasificacion)")
+	            + "AND (:codigoClasificacion IS NULL OR p.COD_CLASIFICACION.COD_CLASIFICACION = :codigoClasificacion)"
+				+ "AND (p.ESTADO='Activo')")
 	    List<Producto> buscarPorCodigoNombreYClasificacion(@Param("codigoNombre") String codigoNombre, @Param("codigoClasificacion") String codigoClasificacion);
 	  
 	@Query("SELECT p FROM Producto p WHERE "
-	            + "(p.COD LIKE %:codigoNombre% OR p.DESCRIPCION LIKE %:codigoNombre%) ")
+	            + "(p.COD LIKE %:codigoNombre% OR p.DESCRIPCION LIKE %:codigoNombre%) "
+				+ "AND (p.ESTADO='Activo')")
 	    List<Producto> buscarPorCodigoNombre(@Param("codigoNombre") String codigoNombre);
 
 }
