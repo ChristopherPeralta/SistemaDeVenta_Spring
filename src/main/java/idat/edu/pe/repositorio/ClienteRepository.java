@@ -13,13 +13,15 @@ import idat.edu.pe.entidad.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, String>{
 	 // Búsqueda por código DNI o Nombre
     @Query("SELECT e FROM Cliente e WHERE "
-            + "(e.COD_CLIENTE LIKE %:codigoDNIoNombre% OR e.NUMERO_DOCUMENTO LIKE %:codigoDNIoNombre% OR e.NOMBRE LIKE %:codigoDNIoNombre%)")
+            + "(e.COD_CLIENTE LIKE %:codigoDNIoNombre% OR e.NUMERO_DOCUMENTO LIKE %:codigoDNIoNombre% OR e.NOMBRE LIKE %:codigoDNIoNombre%)"
+			+ "AND (e.ESTADO='Activo')")
     List<Cliente> buscarPorCodigoDNIoNombre(@Param("codigoDNIoNombre") String codigoDNIoNombre);
 
     // Búsqueda por código DNI o Nombre y Distrito
     @Query("SELECT e FROM Cliente e WHERE "
             + "(e.COD_CLIENTE LIKE %:codigoDNIoNombre% OR e.NUMERO_DOCUMENTO LIKE %:codigoDNIoNombre% OR e.NOMBRE LIKE %:codigoDNIoNombre%) "
-            + "AND (:codigoDistrito IS NULL OR e.COD_DISTRITO.COD_DISTRITO = :codigoDistrito)")
+            + "AND (:codigoDistrito IS NULL OR e.COD_DISTRITO.COD_DISTRITO = :codigoDistrito)"
+			+ "AND (e.ESTADO='Activo')")
     List<Cliente> buscarPorCodigoDNIoNombreYDistrito(@Param("codigoDNIoNombre") String codigoDNIoNombre, @Param("codigoDistrito") String codigoDistrito);
 
    
