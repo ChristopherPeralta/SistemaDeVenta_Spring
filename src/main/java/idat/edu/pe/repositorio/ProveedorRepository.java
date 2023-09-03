@@ -15,13 +15,15 @@ public interface ProveedorRepository extends JpaRepository<Proveedor, String>{
 
 	// Búsqueda por código, RUC y nombre
     @Query("SELECT p FROM Proveedor p WHERE "
-	           + "(p.COD_PROVEEDOR LIKE %:codigoRUCoNombre% OR p.RUC LIKE %:codigoRUCoNombre% OR p.NOMBRE LIKE %:codigoRUCoNombre%)")
+	           + "(p.COD_PROVEEDOR LIKE %:codigoRUCoNombre% OR p.RUC LIKE %:codigoRUCoNombre% OR p.NOMBRE LIKE %:codigoRUCoNombre%)"
+			   + "AND (p.ESTADO='Activo')")
     List<Proveedor> buscarPorCodigoRucNombre(@Param("codigoRUCoNombre") String codigoRUCoNombre);
 
     // Búsqueda por distrito
     @Query("SELECT p FROM Proveedor p WHERE "
 	           	+ "(p.COD_PROVEEDOR LIKE %:codigoRUCoNombre% OR p.RUC LIKE %:codigoRUCoNombre% OR p.NOMBRE LIKE %:codigoRUCoNombre%)"
-    			+ "AND (:codigoDistrito IS NULL OR p.COD_DISTRITO.COD_DISTRITO = :codigoDistrito)")
+    			+ "AND (:codigoDistrito IS NULL OR p.COD_DISTRITO.COD_DISTRITO = :codigoDistrito)"
+ 			    + "AND (p.ESTADO='Activo')")
     			
 	List<Proveedor> buscarPorCodigoRUCoNombreYDistrito(@Param("codigoRUCoNombre") String codigoRUCoNombre, @Param("codigoDistrito") String codigoDistrito);
 }
